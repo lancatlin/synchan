@@ -1,0 +1,16 @@
+{
+  "name": "SynChan",
+  "version": "1.0.0",
+  "description": "Multi-Channel Syncing",
+  "main": "index.js",
+  "author": "Justin Lin",
+  "license": "MIT",
+  "workspaces": [
+    "app",
+    "server"
+  ],
+  "private": true,
+  "scripts": {
+    "dev": "yarn workspace app dev"
+  }
+}
