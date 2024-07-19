@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { play } from "../lib/socket";
 
 export default function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -7,6 +8,7 @@ export default function VideoPlayer() {
   const handlePlay = () => {
     if (videoRef.current) {
       videoRef.current.play();
+      play();
     }
   };
 
