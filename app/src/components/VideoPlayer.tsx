@@ -36,7 +36,7 @@ export default function VideoPlayer() {
         className="w-full h-full"
         controls
         ref={videoRef}
-        src="/videos/sample.mkv"
+        src="http://localhost:3000/videos/sample.mkv"
         onTimeUpdate={updateCurrentTime}
       />
       {currentTime}

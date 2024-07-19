@@ -1,5 +1,5 @@
 {
-  "name": "SynChan",
+  "name": "synchan",
   "version": "1.0.0",
   "description": "Multi-Channel Syncing",
   "main": "index.js",
@@ -11,6 +11,9 @@
   ],
   "private": true,
   "scripts": {
-    "dev": "yarn workspace app dev"
+    "dev": "concurrently \"yarn workspace app dev\" \"yarn workspace server dev\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
   }
 }
