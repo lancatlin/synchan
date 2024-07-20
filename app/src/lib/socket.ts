@@ -10,4 +10,14 @@ export function play() {
   socket.emit("play");
 }
 
+export function pause() {
+  socket.emit("pause");
+}
+
+export function bindReceiveTime(
+  handler: (play: boolean, time: number) => void
+) {
+  socket.on("control", handler);
+}
+
 export default socket;
