@@ -43,6 +43,7 @@ class Timer {
 
   addCallback(callback: TimerCallback) {
     this.callbacks.push(callback);
+    callback(this.playing, this.currentTime);
   }
 
   removeCallback(callback: TimerCallback) {

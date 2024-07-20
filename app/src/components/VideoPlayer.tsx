@@ -4,7 +4,6 @@ import socket, { play, pause, bindReceiveTime, seek } from "../lib/socket";
 export default function VideoPlayer({ video }: { video: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
-  const [seeking, setSeeking] = useState(false);
 
   useEffect(() => {
     bindReceiveTime(handleControl);
@@ -21,17 +20,10 @@ export default function VideoPlayer({ video }: { video: string }) {
     pause();
   };
 
-  const handleSeeking = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    e.preventDefault();
-    console.log(e);
+  const handleSeeking = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = Number(e.target.value);
     if (videoRef.current) {
-      const delta = Math.abs(videoRef.current.currentTime - currentTime);
-      if (delta > 1 && !seeking) {
-        seek(videoRef.current.currentTime);
-        setSeeking(true);
-      } else if (delta < 1 && seeking) {
-        setSeeking(false);
-      }
+      seek(newTime);
     }
   };
 
@@ -47,6 +39,12 @@ export default function VideoPlayer({ video }: { video: string }) {
     }
   };
 
+  const handleFullscreen = () => {
+    if (videoRef.current) {
+      videoRef.current.requestFullscreen();
+    }
+  };
+
   const updateCurrentTime = () => {
     if (videoRef.current) {
       setCurrentTime(videoRef.current.currentTime);
@@ -56,15 +54,11 @@ export default function VideoPlayer({ video }: { video: string }) {
   return (
     <div className="text-2xl">
       <video
-        className="w-full h-full"
-        controls
+        // className="w-2/3"
         ref={videoRef}
         preload="auto"
         src={`/videos/${video}`}
         onTimeUpdate={updateCurrentTime}
-        // onPlay={handlePlay}
-        // onPause={handlePause}
-        onSeeking={handleSeeking}
       />
       <button className="bg-blue-500 text-white p-2" onClick={handlePlay}>
         Play
@@ -72,6 +66,16 @@ export default function VideoPlayer({ video }: { video: string }) {
       <button className="bg-blue-500 text-white p-2" onClick={handlePause}>
         Pause
       </button>
+      <button className="bg-blue-500 text-white p-2" onClick={handleFullscreen}>
+        Fullscreen
+      </button>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={currentTime}
+        onChange={handleSeeking}
+      />
       {currentTime}
       {/* <button className="bg-blue-500 text-white p-2" onClick={handleForward}>
         Forward
