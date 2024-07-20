@@ -14,6 +14,10 @@ export function pause() {
   socket.emit("pause");
 }
 
+export function seek(time: number) {
+  socket.emit("seek", time);
+}
+
 export function bindReceiveTime(
   handler: (play: boolean, time: number) => void
 ) {

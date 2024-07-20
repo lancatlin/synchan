@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import socket, { play, pause, bindReceiveTime } from "../lib/socket";
+import React, { useEffect, useRef, useState } from "react";
+import socket, { play, pause, bindReceiveTime, seek } from "../lib/socket";
 
-export default function VideoPlayer() {
+export default function VideoPlayer({ video }: { video: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
+  const [seeking, setSeeking] = useState(false);
 
   useEffect(() => {
     bindReceiveTime(handleControl);
@@ -18,6 +19,20 @@ export default function VideoPlayer() {
 
   const handlePause = () => {
     pause();
+  };
+
+  const handleSeeking = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    e.preventDefault();
+    console.log(e);
+    if (videoRef.current) {
+      const delta = Math.abs(videoRef.current.currentTime - currentTime);
+      if (delta > 1 && !seeking) {
+        seek(videoRef.current.currentTime);
+        setSeeking(true);
+      } else if (delta < 1 && seeking) {
+        setSeeking(false);
+      }
+    }
   };
 
   const handleControl = (play: boolean, newTime: number) => {
@@ -44,8 +59,12 @@ export default function VideoPlayer() {
         className="w-full h-full"
         controls
         ref={videoRef}
-        src="/videos/sample.mp4"
+        preload="auto"
+        src={`/videos/${video}`}
         onTimeUpdate={updateCurrentTime}
+        // onPlay={handlePlay}
+        // onPause={handlePause}
+        onSeeking={handleSeeking}
       />
       <button className="bg-blue-500 text-white p-2" onClick={handlePlay}>
         Play

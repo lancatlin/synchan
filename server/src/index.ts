@@ -1,4 +1,5 @@
 import Koa from "koa";
+import fs from "fs";
 import { createServer } from "http";
 import koaRouter from "koa-router";
 import serve from "koa-static";
@@ -6,6 +7,9 @@ import mount from "koa-mount";
 import cors from "@koa/cors";
 import range from "koa-range";
 import { createIo } from "./socket";
+import path from "path";
+
+const VIDEO_DIR = "/home/zeko/src/synchan/videos";
 
 const app = new Koa();
 
@@ -14,6 +18,13 @@ const app = new Koa();
 // });
 
 const router = new koaRouter();
+
+router.get("/api/list", async (ctx) => {
+  const files = await fs.promises.readdir(VIDEO_DIR);
+  console.log(files);
+  ctx.body = files;
+});
+
 const httpServer = createServer(app.callback());
 const io = createIo(httpServer);
 app.use(range);
@@ -25,12 +36,13 @@ app.use(
 app.use(
   mount(
     "/videos",
-    serve("../videos", {
+    serve(VIDEO_DIR, {
       setHeaders: (res, path, stats) => {
         res.setHeader("Content-Type", "video/mp4");
       },
     })
   )
 );
+app.use(router.routes());
 
 httpServer.listen(3000);

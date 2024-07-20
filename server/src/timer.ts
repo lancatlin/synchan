@@ -37,8 +37,8 @@ class Timer {
   seek(time: number) {
     this.currentTime = time;
     this.lastUpdate = new Date();
+    this.playing = false;
     this.notifyCallbacks();
-    this.setTimeout();
   }
 
   addCallback(callback: TimerCallback) {
