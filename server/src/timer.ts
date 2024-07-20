@@ -1,7 +1,7 @@
 type TimerCallback = (play: boolean, time: number) => void;
 
 class Timer {
-  private intervalId: NodeJS.Timeout | null = null;
+  private timeoutId: NodeJS.Timeout | null = null;
   private lastUpdate: Date = new Date();
   private currentTime: number = 0;
   private callbacks: TimerCallback[] = [];
@@ -10,17 +10,27 @@ class Timer {
   constructor(private duration: number) {}
 
   play() {
+    if (this.playing) {
+      return;
+    }
     this.playing = true;
     this.lastUpdate = new Date();
+    this.setTimeout();
     this.notifyCallbacks();
   }
 
   pause() {
+    if (!this.playing) {
+      return;
+    }
     const now = new Date();
     const delta = (now.getTime() - this.lastUpdate.getTime()) / 1000;
-    this.currentTime += delta % this.duration;
+    this.currentTime += delta;
     this.lastUpdate = now;
     this.playing = false;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
     this.notifyCallbacks();
   }
 
@@ -28,6 +38,7 @@ class Timer {
     this.currentTime = time;
     this.lastUpdate = new Date();
     this.notifyCallbacks();
+    this.setTimeout();
   }
 
   addCallback(callback: TimerCallback) {
@@ -38,13 +49,19 @@ class Timer {
     this.callbacks = this.callbacks.filter((cb) => cb !== callback);
   }
 
-  getCurrentTime() {
-    return this.currentTime;
-  }
-
   private notifyCallbacks() {
     this.callbacks.forEach((callback) =>
       callback(this.playing, this.currentTime)
+    );
+  }
+
+  private setTimeout() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = setTimeout(
+      () => this.seek(0),
+      (this.duration - this.currentTime) * 1000
     );
   }
 }

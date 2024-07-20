@@ -29,7 +29,6 @@ export default function VideoPlayer() {
         videoRef.current.pause();
       }
       videoRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
     }
   };
 
