@@ -34,10 +34,10 @@ class Timer {
     this.notifyCallbacks();
   }
 
-  seek(time: number) {
+  seek(time: number, play: boolean = false) {
     this.currentTime = time;
     this.lastUpdate = new Date();
-    this.playing = false;
+    this.playing = play;
     this.notifyCallbacks();
   }
 
@@ -61,7 +61,7 @@ class Timer {
       clearTimeout(this.timeoutId);
     }
     this.timeoutId = setTimeout(
-      () => this.seek(0),
+      () => this.seek(0, true),
       (this.duration - this.currentTime) * 1000
     );
   }

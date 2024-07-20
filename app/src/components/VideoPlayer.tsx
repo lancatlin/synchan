@@ -60,23 +60,42 @@ export default function VideoPlayer({ video }: { video: string }) {
         src={`/videos/${video}`}
         onTimeUpdate={updateCurrentTime}
       />
-      <button className="bg-blue-500 text-white p-2" onClick={handlePlay}>
-        Play
-      </button>
-      <button className="bg-blue-500 text-white p-2" onClick={handlePause}>
-        Pause
-      </button>
-      <button className="bg-blue-500 text-white p-2" onClick={handleFullscreen}>
-        Fullscreen
-      </button>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={currentTime}
-        onChange={handleSeeking}
-      />
-      {currentTime}
+      <div className="flex flex-row justify-around mt-2 px-2 items-center gap-2">
+        {videoRef.current?.paused ? (
+          <button
+            className="bg-blue-500 text-white p-2 rounded-lg"
+            onClick={handlePlay}
+          >
+            Play
+          </button>
+        ) : (
+          <button
+            className="bg-blue-500 text-white p-2 rounded-lg"
+            onClick={handlePause}
+          >
+            Pause
+          </button>
+        )}
+        <input
+          className="w-full"
+          type="range"
+          min={0}
+          max={videoRef.current?.duration || 0}
+          step={1}
+          value={currentTime}
+          onChange={handleSeeking}
+        />
+        <p className="text-sm text-nowrap">
+          {Math.round(currentTime)} /{" "}
+          {Math.round(videoRef.current?.duration || 0)}
+        </p>
+        <button
+          className="bg-blue-500 text-white p-2 rounded-lg"
+          onClick={handleFullscreen}
+        >
+          Fullscreen
+        </button>
+      </div>
       {/* <button className="bg-blue-500 text-white p-2" onClick={handleForward}>
         Forward
       </button> */}
