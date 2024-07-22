@@ -50,6 +50,14 @@ class Timer {
     this.callbacks = this.callbacks.filter((cb) => cb !== callback);
   }
 
+  replay() {
+    this.currentTime = 0;
+    this.lastUpdate = new Date();
+    this.playing = true;
+    this.setTimeout();
+    this.notifyCallbacks();
+  }
+
   private notifyCallbacks() {
     this.callbacks.forEach((callback) =>
       callback(this.playing, this.currentTime)
@@ -61,7 +69,7 @@ class Timer {
       clearTimeout(this.timeoutId);
     }
     this.timeoutId = setTimeout(
-      () => this.seek(0, true),
+      () => this.replay(),
       (this.duration - this.currentTime) * 1000
     );
   }

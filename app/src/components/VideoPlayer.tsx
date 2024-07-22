@@ -61,21 +61,18 @@ export default function VideoPlayer({ video }: { video: string }) {
         onTimeUpdate={updateCurrentTime}
       />
       <div className="flex flex-row justify-around mt-2 px-2 items-center gap-2">
-        {videoRef.current?.paused ? (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg"
-            onClick={handlePlay}
-          >
-            Play
-          </button>
-        ) : (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg"
-            onClick={handlePause}
-          >
-            Pause
-          </button>
-        )}
+        <button
+          className="bg-blue-500 text-white p-2 rounded-lg"
+          onClick={handlePlay}
+        >
+          Play
+        </button>
+        <button
+          className="bg-blue-500 text-white p-2 rounded-lg"
+          onClick={handlePause}
+        >
+          Pause
+        </button>
         <input
           className="w-full"
           type="range"
