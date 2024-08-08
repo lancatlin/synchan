@@ -11,12 +11,25 @@ function App() {
       .then(setVideos);
   }, []);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const videoFromQuery = searchParams.get("video");
+    if (videoFromQuery) {
+      setSelectedVideo(videoFromQuery);
+    }
+  }, []);
+
   return (
     <>
       {selectedVideo && <VideoPlayer video={selectedVideo} />}
       <select
         value={selectedVideo || ""}
-        onChange={(e) => setSelectedVideo(e.target.value)}
+        onChange={(e) => {
+          setSelectedVideo(e.target.value);
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set("video", e.target.value);
+          window.history.pushState(null, "", `?${searchParams.toString()}`);
+        }}
       >
         <option value="" disabled>
           Select a video

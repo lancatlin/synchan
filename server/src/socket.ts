@@ -11,7 +11,7 @@ export function createIo(httpServer: HttpServer) {
     },
   });
 
-  const timer = new Timer(3 * 60 + 39);
+  const timer = new Timer(526);
 
   io.on("connection", (socket) => {
     console.log("a user connected");
