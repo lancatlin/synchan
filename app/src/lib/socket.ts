@@ -21,6 +21,7 @@ export function seek(time: number) {
 export function bindReceiveTime(
   handler: (play: boolean, time: number) => void
 ) {
+  socket.off("control");
   socket.on("control", handler);
 }
 

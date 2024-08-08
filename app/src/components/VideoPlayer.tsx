@@ -28,20 +28,31 @@ export default function VideoPlayer({ video }: { video: string }) {
   };
 
   const handleControl = (play: boolean, newTime: number) => {
-    console.log(play, newTime);
     if (videoRef.current) {
+      console.log("control", play, newTime, videoRef.current.currentTime);
       if (play) {
+        const diff = Math.abs(newTime - videoRef.current.currentTime);
+        if (diff > 1) {
+          console.log("seeking", diff);
+          videoRef.current.currentTime = newTime + 0.1;
+        }
         videoRef.current.play();
       } else {
         videoRef.current.pause();
+        videoRef.current.currentTime = newTime;
       }
-      videoRef.current.currentTime = newTime;
     }
   };
 
   const handleFullscreen = () => {
     if (videoRef.current) {
       videoRef.current.requestFullscreen();
+    }
+  };
+
+  const handleUnMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = false;
     }
   };
 
@@ -52,12 +63,13 @@ export default function VideoPlayer({ video }: { video: string }) {
   };
 
   return (
-    <div className="text-2xl">
+    <div className="text-2xl" onClick={handleUnMute}>
       <video
         // className="w-2/3"
         ref={videoRef}
         preload="auto"
         src={`/videos/${video}`}
+        muted
         onTimeUpdate={updateCurrentTime}
       />
       <div className="flex flex-row justify-around mt-2 px-2 items-center gap-2">

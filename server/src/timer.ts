@@ -7,7 +7,14 @@ class Timer {
   private callbacks: TimerCallback[] = [];
   private playing: boolean = false;
 
-  constructor(private duration: number) {}
+  constructor(private duration: number) {
+    setInterval(() => {
+      if (this.playing) {
+        this.computeDuration();
+        this.notifyCallbacks();
+      }
+    }, 2000);
+  }
 
   play() {
     if (this.playing) {
@@ -23,10 +30,7 @@ class Timer {
     if (!this.playing) {
       return;
     }
-    const now = new Date();
-    const delta = (now.getTime() - this.lastUpdate.getTime()) / 1000;
-    this.currentTime += delta;
-    this.lastUpdate = now;
+    this.computeDuration();
     this.playing = false;
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
@@ -58,7 +62,15 @@ class Timer {
     this.notifyCallbacks();
   }
 
+  private computeDuration() {
+    const now = new Date();
+    const delta = (now.getTime() - this.lastUpdate.getTime()) / 1000;
+    this.lastUpdate = now;
+    this.currentTime += delta;
+  }
+
   private notifyCallbacks() {
+    console.log("notifyCallbacks", this.playing, this.currentTime);
     this.callbacks.forEach((callback) =>
       callback(this.playing, this.currentTime)
     );

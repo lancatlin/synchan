@@ -3,15 +3,13 @@ import { Server as IoServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import Timer from "./timer";
 
-export function createIo(httpServer: HttpServer) {
+export function createIo(httpServer: HttpServer, timer: Timer) {
   const io = new IoServer(httpServer, {
     // TODO: handle CORS properly
     cors: {
       origin: true,
     },
   });
-
-  const timer = new Timer(526);
 
   io.on("connection", (socket) => {
     console.log("a user connected");

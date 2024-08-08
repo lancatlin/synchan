@@ -8,8 +8,10 @@ import cors from "@koa/cors";
 import range from "koa-range";
 import { createIo } from "./socket";
 import path from "path";
+import Timer from "./timer";
 
 const VIDEO_DIR = "/home/zeko/src/synchan/videos";
+const DURATION = 219;
 
 const app = new Koa();
 
@@ -26,7 +28,8 @@ router.get("/api/list", async (ctx) => {
 });
 
 const httpServer = createServer(app.callback());
-const io = createIo(httpServer);
+const timer = new Timer(DURATION);
+const io = createIo(httpServer, timer);
 app.use(range);
 app.use(
   cors({
